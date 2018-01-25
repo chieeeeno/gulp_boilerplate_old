@@ -9,6 +9,7 @@ const gulp = require('gulp');
 const cache = require('gulp-cached');
 const clean = require('gulp-clean');
 const csscomb = require('gulp-csscomb');
+const convert = require('gulp-convert');
 const eslint = require('gulp-eslint');
 const ejs = require('gulp-ejs');
 const htmlbeautify = require('gulp-html-beautify');
@@ -22,6 +23,7 @@ const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const stripDebug = require('gulp-strip-debug');
 
+
 // その他モジュール
 const browserSync = require('browser-sync');
 // const mozjpeg = require('imagemin-mozjpeg');
@@ -32,6 +34,8 @@ const runSequence = require('run-sequence').use(gulp);
 
 // 設定ファイル
 const setting = require('./setting.json');
+
+// const jsonData = require('./src/_assets/ejs-json/data.json');
 
 //**************************************
 // 変数の設定
@@ -49,6 +53,8 @@ const BEAUTIFY_OPTION = setting.beautify;
 
 // サイト設定
 const SITE_CONFIG = setting.site_config;
+
+
 
 //**************************************
 // Gulpタスク定義
@@ -105,7 +111,10 @@ gulp.task('ejs', () => {
   return gulp.src([`${PATHS.src}**/*.ejs`, `!${PATHS.src}**/_*.ejs`])
     .pipe(cache('ejs'))
     .pipe(plumber({ errorHandler: notify.onError('<%- error.message %>') }))
-    .pipe(ejs({config:SITE_CONFIG}))
+    .pipe(ejs({
+      jsonData:jsonData,
+      config:SITE_CONFIG
+    }))
     .pipe(htmlbeautify(BEAUTIFY_OPTION))
     .pipe(rename({ extname: '.html' }))
     .pipe(gulp.dest(PATHS.src))
@@ -113,6 +122,20 @@ gulp.task('ejs', () => {
       message: 'EJS task complete'
     }));
 });
+
+// csv 変換
+gulp.task('csv2json', function(){
+  gulp.src([`${PATHS.src}**/_assets/csv/*.csv`])
+    .pipe(convert({
+      from: 'csv',
+      to: 'json'
+     }))
+    .pipe(rename((path) => {
+      path.dirname += '/../ejs-json'; // 出力先をejs-jsonフォルダに変更
+    }))
+    .pipe(gulp.dest(PATHS.src));
+});
+
 
 
 // ブラウザをリロード
@@ -156,7 +179,7 @@ gulp.task('clean', () => {
 });
 
 // jsファイルのconsoleなどを削除
-gulp.task('build-js', ['eslint'], () => {
+gulp.task('build-js', () => {
   return gulp.src(`${PATHS.src}**/*.js`)
     .pipe(plumber())
     .pipe(stripDebug())
@@ -182,7 +205,7 @@ gulp.task('optimize-img', () => {
       //   quality: 85,
       //   progressive: true
       // }),
-      imagemin.svgo(),
+      // imagemin.svgo(),
       imagemin.optipng(),
       imagemin.gifsicle()
     ]))
