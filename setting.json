@@ -16,6 +16,9 @@
     "max_preserve_newlines": 0,
     "indent_inner_html": false
   },
+  "prettier":{
+    "singleQuote":true
+  },
   "site_config":{
     "ga_account":"UA-00000000-1",
     "tw_card":true,

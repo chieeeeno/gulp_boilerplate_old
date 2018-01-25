@@ -35,7 +35,7 @@ const runSequence = require('run-sequence').use(gulp);
 // 設定ファイル
 const setting = require('./setting.json');
 
-// const jsonData = require('./src/_assets/ejs-json/data.json');
+
 
 //**************************************
 // 変数の設定
@@ -108,6 +108,7 @@ gulp.task('ejs-cache', () => {
 
 // EJSのコンパイル
 gulp.task('ejs', () => {
+  let jsonData = require('./src/_assets/ejs-json/data.json');
   return gulp.src([`${PATHS.src}**/*.ejs`, `!${PATHS.src}**/_*.ejs`])
     .pipe(cache('ejs'))
     .pipe(plumber({ errorHandler: notify.onError('<%- error.message %>') }))
@@ -164,7 +165,7 @@ gulp.task('default', [
   gulp.watch([`${PATHS.src}**/*.ejs`,`!${PATHS.src}**/_*.ejs`, '!node_modules'], ['ejs','reload']);
   gulp.watch([`${PATHS.src}**/*.html`, '!node_modules'], ['reload']);
   gulp.watch([`${PATHS.src}**/*.{sass,scss}`, '!node_modules'], ['sass']);
-  gulp.watch([`${PATHS.src}**/*.js`, '!node_modules'], ['eslint']);
+  // gulp.watch([`${PATHS.src}**/*.js`, '!node_modules'], ['eslint']);
 });
 
 
