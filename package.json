@@ -33,6 +33,7 @@
     "imagemin-pngquant": "^5.0.1",
     "node-notifier": "^5.1.2",
     "postcss-cssnext": "^3.0.2",
+    "prettier": "^1.10.2",
     "run-sequence": "^2.0.0"
   }
 }

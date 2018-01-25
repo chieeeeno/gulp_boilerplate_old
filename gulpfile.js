@@ -22,6 +22,7 @@ const replace = require('gulp-replace');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const stripDebug = require('gulp-strip-debug');
+const prettierPlugin = require('gulp-prettier-plugin');
 
 
 // その他モジュール
@@ -50,6 +51,7 @@ const AUTOPREFIXER_SETTING = [
 ];
 // HTML整形の設定
 const BEAUTIFY_OPTION = setting.beautify;
+const PRETTIER_CONFIG = setting.prettier;
 
 // サイト設定
 const SITE_CONFIG = setting.site_config;
@@ -138,6 +140,14 @@ gulp.task('csv2json', function(){
 });
 
 
+// コードフォーマット
+gulp.task('prettier', () => {
+  return gulp.src([`${PATHS.src}**/*.{sass,scss}`,`${PATHS.src}**/*.js`,`!${PATHS.src}**/*.min.js`])
+    .pipe(plumber({ errorHandler: notify.onError('<%- error.message %>') }))
+    .pipe(prettierPlugin(PRETTIER_CONFIG, { filter: true }))
+    .pipe(gulp.dest(file => file.base))
+});
+
 
 // ブラウザをリロード
 gulp.task('reload', () => {
@@ -164,8 +174,8 @@ gulp.task('default', [
 ], () => {
   gulp.watch([`${PATHS.src}**/*.ejs`,`!${PATHS.src}**/_*.ejs`, '!node_modules'], ['ejs','reload']);
   gulp.watch([`${PATHS.src}**/*.html`, '!node_modules'], ['reload']);
-  gulp.watch([`${PATHS.src}**/*.{sass,scss}`, '!node_modules'], ['sass']);
-  // gulp.watch([`${PATHS.src}**/*.js`, '!node_modules'], ['eslint']);
+  gulp.watch([`${PATHS.src}**/*.{sass,scss}`, '!node_modules'], ['prettier','sass']);
+  gulp.watch([`${PATHS.src}**/*.js`,`!${PATHS.src}**/*.min.js`, '!node_modules'], ['prettier','eslint']);
 });
 
 
@@ -217,6 +227,7 @@ gulp.task('optimize-img', () => {
 gulp.task('build-css', () => {
   return gulp.src(`${PATHS.src}**/*.{sass,scss}`)
     .pipe(plumber({ errorHandler: notify.onError('<%- error.message %>') }))
+    // .pipe(prettierPlugin(PRETTIER_CONFIG, { filter: true }))
     .pipe(sass())
     .pipe(postcss(AUTOPREFIXER_SETTING))
     .pipe(csscomb())

@@ -1,17 +1,16 @@
-body{
-  margin:0px;
-  background-color: #fff;  
+body {
+  margin: 0px;
+  background-color: #fff;
 }
 
-.imgBlock{
+.imgBlock {
   width: 50%;
-  a{
-    &:hover{
-      opacity:0.6;
+  a {
+    &:hover {
+      opacity: 0.6;
     }
   }
-  img{
+  img {
     width: 100%;
   }
 }
-
