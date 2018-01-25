@@ -1,0 +1,25 @@
+{
+  "path":{
+    "src":"./src/",
+    "dest":"./build/"
+  },
+  "autoprefixer":{
+    "browsers":[
+      "android > 4",
+      "iOS > 9",
+      "last 6 versions"
+    ]
+  },
+  "beautify":{
+    "indent_size":2,
+    "indent_char":" ",
+    "max_preserve_newlines": 0,
+    "indent_inner_html": false
+  },
+  "site_config":{
+    "ga_account":"UA-00000000-1",
+    "tw_card":true,
+    "tw_card_type":"app",
+    "fb_app_links":true
+  }
+}

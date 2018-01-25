@@ -1,0 +1,36 @@
+{
+  "name": "gulp_boilerplate",
+  "version": "1.0.0",
+  "description": "Basic setting of Gulp for create a new website",
+  "scripts": {
+    "start": "gulp",
+    "build": "gulp build",
+    "lint": "gulp eslint"
+  },
+  "author": "Tomoki Kikuchi",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.18.12",
+    "gulp": "^3.9.1",
+    "gulp-cached": "^1.1.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-csscomb": "^3.0.8",
+    "gulp-ejs": "^3.0.1",
+    "gulp-eslint": "^4.0.0",
+    "gulp-html-beautify": "^1.0.1",
+    "gulp-imagemin": "^3.0.0",
+    "gulp-notify": "^3.0.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-postcss": "^7.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.6.1",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.0",
+    "gulp-strip-debug": "^1.1.0",
+    "imagemin-mozjpeg": "^6.0.0",
+    "imagemin-pngquant": "^5.0.1",
+    "node-notifier": "^5.1.2",
+    "postcss-cssnext": "^3.0.2",
+    "run-sequence": "^2.0.0"
+  }
+}
