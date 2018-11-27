@@ -1,28 +1,24 @@
 {
-  "path":{
-    "src":"./src/",
-    "dest":"./build/"
+  "path": {
+    "src": "./src/",
+    "dest": "./build/"
   },
-  "autoprefixer":{
-    "browsers":[
-      "android > 4",
-      "iOS > 9",
-      "last 6 versions"
-    ]
+  "autoprefixer": {
+    "browsers": ["android > 5", "iOS > 10", "last 3 versions"]
   },
-  "beautify":{
-    "indent_size":2,
-    "indent_char":" ",
+  "beautify": {
+    "indent_size": 2,
+    "indent_char": " ",
     "max_preserve_newlines": 0,
     "indent_inner_html": false
   },
-  "prettier":{
-    "singleQuote":true
+  "prettier": {
+    "singleQuote": true
   },
-  "site_config":{
-    "ga_account":"UA-00000000-1",
-    "tw_card":true,
-    "tw_card_type":"app",
-    "fb_app_links":true
+  "site_config": {
+    "ga_account": "UA-00000000-1",
+    "tw_card": false,
+    "tw_card_type": "app",
+    "fb_app_links": false
   }
 }

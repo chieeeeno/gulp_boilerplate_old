@@ -1,4 +1,4 @@
-build/
+#build/
 
 .sass-cache/
 *.css.map
@@ -103,4 +103,7 @@ Temporary Items
 !.vscode/launch.json
 !.vscode/extensions.json
 
-.idea
+.idea/*
+
+.htaccess
+.htpasswd
