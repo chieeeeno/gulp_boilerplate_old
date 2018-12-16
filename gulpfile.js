@@ -24,6 +24,8 @@ const sourcemaps = require('gulp-sourcemaps');
 const stripDebug = require('gulp-strip-debug');
 const prettierPlugin = require('gulp-prettier-plugin');
 const gulpIf = require('gulp-if');
+const autoprefixer = require('autoprefixer');
+const postcssGapProperties = require('postcss-gap-properties');
 
 // その他モジュール
 const browserSync = require('browser-sync');
@@ -80,7 +82,16 @@ gulp.task('sass', () => {
     .pipe(cache('sass'))
     .pipe(sourcemaps.init())
     .pipe(sass())
-    .pipe(postcss(AUTOPREFIXER_SETTING))
+    .pipe(
+      postcss([
+        postcssGapProperties(),
+        autoprefixer({
+          browsers: ['android > 5', 'iOS > 8', 'last 3 versions'],
+          grid: true,
+          cascade: false,
+        }),
+      ])
+    )
     .pipe(csscomb())
     .pipe(
       rename(path => {
@@ -118,7 +129,7 @@ gulp.task('ejs-cache', () => {
 // EJSのコンパイル
 gulp.task('ejs', () => {
   // let jsonData = require('./src/_assets/ejs-json/data.json');
-  const outDir = env === 'dev' ? PATHS.src : PATHS.dest
+  const outDir = env === 'dev' ? PATHS.src : PATHS.dest;
   return gulp
     .src([`${PATHS.src}**/*.ejs`, `!${PATHS.src}**/_*.ejs`])
     .pipe(cache('ejs'))
@@ -133,11 +144,11 @@ gulp.task('ejs', () => {
     .pipe(htmlbeautify(BEAUTIFY_OPTION))
     .pipe(rename({ extname: '.html' }))
     .pipe(gulp.dest(outDir))
-    .pipe(()=>{
-      if (env === 'dev'){
+    .pipe(() => {
+      if (env === 'dev') {
         notify({
           message: 'EJS task complete',
-        })
+        });
       }
     });
 });
@@ -272,13 +283,9 @@ gulp.task('build-css', () => {
 // JSONファイルやウェブフォントやライブラリのファイルをコピーする
 gulp.task('copy', () => {
   return gulp
-    .src([
-      `${PATHS.src}**/*.json`,
-      `${PATHS.src}**/*.woff`,
-      `${PATHS.src}**/*.woff2`,
-      `${PATHS.src}**/css/libs/*.css`,
-      `${PATHS.src}**/*.min.js`,
-    ], { base: 'src' })
+    .src([`${PATHS.src}**/*.json`, `${PATHS.src}**/*.woff`, `${PATHS.src}**/*.woff2`, `${PATHS.src}**/css/libs/*.css`, `${PATHS.src}**/*.min.js`], {
+      base: 'src',
+    })
     .pipe(gulp.dest(PATHS.dest));
 });
 

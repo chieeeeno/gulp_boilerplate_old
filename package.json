@@ -10,6 +10,7 @@
   "author": "Tomoki Kikuchi",
   "license": "ISC",
   "devDependencies": {
+    "autoprefixer": "^9.4.2",
     "browser-sync": "^2.26.3",
     "clean-webpack-plugin": "^1.0.0",
     "copy-webpack-plugin": "^4.6.0",
@@ -37,6 +38,7 @@
     "imagemin-pngquant": "^6.0.0",
     "node-notifier": "^5.1.2",
     "postcss-cssnext": "^3.0.2",
+    "postcss-gap-properties": "^2.0.0",
     "prettier": "^1.10.2",
     "run-sequence": "^2.0.0",
     "webpack": "^4.25.1",
