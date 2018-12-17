@@ -13,4 +13,53 @@ body {
   width : 100%;
 }
 
+.grid {
+  width : 74.375%;
+  max-width : 1190px;
+  margin : 0 auto;
+  display : -ms-grid;
+  display :     grid;
+  -ms-grid-columns : 30.25% 10px 37.81% 10px 30.25%;
+  grid-template-columns : 30.25% 37.81% 30.25%;
+  -ms-grid-rows : 100px 10px 1fr 10px 2fr;
+  grid-template-rows : 100px 1fr 2fr;
+  grid-template-areas : "area1 area2 area2" "area1 area3 area5" "area4 area4 area5";
+  grid-gap : 10px;
+  gap : 10px;
+}
+.grid > li {
+  list-style : none;
+  border : solid 1px #000;
+  width : 100%;
+}
+.grid > li.grid-area1 {
+  -ms-grid-row : 1;
+  -ms-grid-row-span : 3;
+  -ms-grid-column : 1;
+  grid-area : area1;
+}
+.grid > li.grid-area2 {
+  -ms-grid-row : 1;
+  -ms-grid-column : 3;
+  -ms-grid-column-span : 3;
+  grid-area : area2;
+}
+.grid > li.grid-area3 {
+  -ms-grid-row : 3;
+  -ms-grid-column : 3;
+  grid-area : area3;
+}
+.grid > li.grid-area4 {
+  -ms-grid-row : 5;
+  -ms-grid-column : 1;
+  -ms-grid-column-span : 3;
+  grid-area : area4;
+}
+.grid > li.grid-area5 {
+  -ms-grid-row : 3;
+  -ms-grid-row-span : 3;
+  -ms-grid-column : 5;
+  grid-area : area5;
+}
+
 /*# sourceMappingURL=style.css.map */

@@ -143,14 +143,12 @@ gulp.task('ejs', () => {
     )
     .pipe(htmlbeautify(BEAUTIFY_OPTION))
     .pipe(rename({ extname: '.html' }))
-    .pipe(gulp.dest(outDir))
-    .pipe(() => {
-      if (env === 'dev') {
-        notify({
-          message: 'EJS task complete',
-        });
-      }
-    });
+    .pipe(gulp.dest(outDir));
+  // .pipe(() => {
+  //   if (env === 'dev') {
+  //     notify({ message: 'EJS task complete' });
+  //   }
+  // })
 });
 
 // csv 変換
@@ -192,6 +190,7 @@ gulp.task('browser-sync', () => {
     server: {
       baseDir: PATHS.src,
     },
+    open: 'external',
   });
 });
 
