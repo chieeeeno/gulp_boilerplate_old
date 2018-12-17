@@ -3,63 +3,71 @@ body {
   background-color : #fff;
 }
 
-.imgBlock {
-  width : 50%;
-}
-.imgBlock a:hover {
-  opacity : 0.6;
-}
-.imgBlock img {
-  width : 100%;
-}
-
-.grid {
-  width : 74.375%;
-  max-width : 1190px;
+.grid-container {
+  width : 90%;
+  height : 500px;
   margin : 0 auto;
   display : -ms-grid;
   display :     grid;
-  -ms-grid-columns : 30.25% 10px 37.81% 10px 30.25%;
-  grid-template-columns : 30.25% 37.81% 30.25%;
-  -ms-grid-rows : 100px 10px 1fr 10px 2fr;
-  grid-template-rows : 100px 1fr 2fr;
-  grid-template-areas : "area1 area2 area2" "area1 area3 area5" "area4 area4 area5";
+  -ms-grid-columns : 250px 10px 1fr 10px 1fr 10px 200px 10px 1fr;
+  grid-template-columns : 250px 1fr 1fr 200px 1fr;
+  -ms-grid-rows : 50px 10px 1fr 10px 1fr;
+  grid-template-rows : 50px 1fr 1fr;
+  grid-template-areas : "area1 area1 area2 area2 area7" "area3 area4 area4 area5 area7" "area3 area6 area6 area6 area7";
   grid-gap : 10px;
   gap : 10px;
 }
-.grid > li {
-  list-style : none;
-  border : solid 1px #000;
-  width : 100%;
+
+.grid-container > div {
+  border : solid #000 1px;
 }
-.grid > li.grid-area1 {
+
+.area1 {
   -ms-grid-row : 1;
-  -ms-grid-row-span : 3;
   -ms-grid-column : 1;
+  -ms-grid-column-span : 3;
   grid-area : area1;
 }
-.grid > li.grid-area2 {
+
+.area2 {
   -ms-grid-row : 1;
-  -ms-grid-column : 3;
+  -ms-grid-column : 5;
   -ms-grid-column-span : 3;
   grid-area : area2;
 }
-.grid > li.grid-area3 {
+
+.area3 {
   -ms-grid-row : 3;
-  -ms-grid-column : 3;
+  -ms-grid-row-span : 3;
+  -ms-grid-column : 1;
   grid-area : area3;
 }
-.grid > li.grid-area4 {
-  -ms-grid-row : 5;
-  -ms-grid-column : 1;
+
+.area4 {
+  -ms-grid-row : 3;
+  -ms-grid-column : 3;
   -ms-grid-column-span : 3;
   grid-area : area4;
 }
-.grid > li.grid-area5 {
+
+.area5 {
   -ms-grid-row : 3;
-  -ms-grid-row-span : 3;
-  -ms-grid-column : 5;
+  -ms-grid-column : 7;
   grid-area : area5;
+}
+
+.area6 {
+  -ms-grid-row : 5;
+  -ms-grid-column : 3;
+  -ms-grid-column-span : 5;
+  grid-area : area6;
+}
+
+.area7 {
+  -ms-grid-row : 1;
+  -ms-grid-row-span : 5;
+  -ms-grid-column : 9;
+  grid-area : area7;
 }
 
 /*# sourceMappingURL=style.css.map */
