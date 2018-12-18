@@ -23,17 +23,15 @@ const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const stripDebug = require('gulp-strip-debug');
 const prettierPlugin = require('gulp-prettier-plugin');
-const gulpIf = require('gulp-if');
 const autoprefixer = require('autoprefixer');
 const postcssGapProperties = require('postcss-gap-properties');
 
 // その他モジュール
 const browserSync = require('browser-sync');
-// const mozjpeg = require('imagemin-mozjpeg');
+const mozjpeg = require('imagemin-mozjpeg');
 const pngquant = require('imagemin-pngquant');
+
 const notifier = require('node-notifier');
-const cssnext = require('postcss-cssnext');
-const runSequence = require('run-sequence').use(gulp);
 
 // 設定ファイル
 const setting = require('./setting.json');
@@ -45,16 +43,21 @@ const env = process.env.NODE_ENV;
 // 変数の設定
 //**************************************
 // 入出力パス
-const PATHS = setting.path;
-// autoprefixerの設定
-const AUTOPREFIXER_SETTING = [
-  cssnext({
-    browsers: setting.autoprefixer.browsers,
-  }),
-];
+const PATHS = {
+  src: './src/',
+  dest: './build/',
+};
+
 // HTML整形の設定
-const BEAUTIFY_OPTION = setting.beautify;
-const PRETTIER_CONFIG = setting.prettier;
+const BEAUTIFY_OPTION = {
+  indent_size: 2,
+  indent_char: ' ',
+  max_preserve_newlines: 0,
+  indent_inner_html: false,
+};
+const PRETTIER_CONFIG = {
+  singleQuote: true,
+};
 
 // サイト設定
 const SITE_CONFIG = setting.site_config;
@@ -74,24 +77,11 @@ gulp.task('sass-cache', () => {
 gulp.task('sass', () => {
   return gulp
     .src(`${PATHS.src}**/*.{sass,scss}`)
-    .pipe(
-      plumber({
-        errorHandler: notify.onError('<%- error.message %>'),
-      })
-    )
+    .pipe(plumber({ errorHandler: notify.onError('<%- error.message %>') }))
     .pipe(cache('sass'))
     .pipe(sourcemaps.init())
     .pipe(sass())
-    .pipe(
-      postcss([
-        postcssGapProperties(),
-        autoprefixer({
-          browsers: ['android > 5', 'iOS > 8', 'last 3 versions'],
-          grid: true,
-          cascade: false,
-        }),
-      ])
-    )
+    .pipe(postcss([postcssGapProperties(), autoprefixer({ grid: true, cascade: false })]))
     .pipe(csscomb())
     .pipe(
       rename(path => {
@@ -101,10 +91,12 @@ gulp.task('sass', () => {
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(PATHS.src))
     .pipe(browserSync.stream());
-  // .pipe(notify({
-  //   title: 'Gulp',
-  //   message: 'css task complete'
-  // }));
+  // .pipe(() => {
+  //   notifier.notify({
+  //     title: 'Gulp',
+  //     message: 'css task complete',
+  //   });
+  // });
 });
 
 // jsのlint処理
@@ -144,16 +136,18 @@ gulp.task('ejs', () => {
     .pipe(htmlbeautify(BEAUTIFY_OPTION))
     .pipe(rename({ extname: '.html' }))
     .pipe(gulp.dest(outDir));
-  // .pipe(() => {
+
+  // .pipe(callback => {
+  //   console.log(callback);
   //   if (env === 'dev') {
   //     notify({ message: 'EJS task complete' });
   //   }
-  // })
+  // });
 });
 
 // csv 変換
-gulp.task('csv2json', function() {
-  gulp
+gulp.task('csv2json', () => {
+  return gulp
     .src([`${PATHS.src}**/_assets/csv/*.csv`])
     .pipe(
       convert({
@@ -178,29 +172,46 @@ gulp.task('prettier', () => {
     .pipe(gulp.dest(file => file.base));
 });
 
-// ブラウザをリロード
-gulp.task('reload', () => {
+function successNotify(message, callback) {
+  notifier.notify({
+    title: 'Gulp',
+    message: message,
+  });
+  callback();
+}
+
+// // ブラウザをリロード
+function reloadTask(callback) {
   browserSync.reload();
-});
+  callback();
+}
 
 // サーバー起動
-gulp.task('browser-sync', () => {
-  return browserSync({
-    port: 3000,
-    server: {
-      baseDir: PATHS.src,
+function browserSyncTask(callback) {
+  browserSync(
+    {
+      port: 3000,
+      server: {
+        baseDir: PATHS.src,
+      },
+      open: 'external',
     },
-    open: 'external',
-  });
-});
+    () => {
+      callback();
+    }
+  );
+}
 
 // デフォルトタスク
-gulp.task('default', ['ejs', 'ejs-cache', 'sass-cache', 'browser-sync', 'reload'], () => {
-  gulp.watch([`${PATHS.src}**/*.ejs`, `!${PATHS.src}**/_*.ejs`, '!node_modules'], ['ejs', 'reload']);
-  gulp.watch([`${PATHS.src}**/*.html`, '!node_modules'], ['reload']);
-  gulp.watch([`${PATHS.src}**/*.{sass,scss}`, '!node_modules'], ['sass']);
-  gulp.watch([`${PATHS.src}**/*.js`, `!${PATHS.src}**/*.min.js`, '!node_modules'], ['eslint']);
-});
+gulp.task(
+  'default',
+  gulp.series('ejs', 'ejs-cache', 'sass-cache', browserSyncTask, reloadTask, callback => {
+    gulp.watch([`${PATHS.src}**/*.ejs`, `!${PATHS.src}**/_*.ejs`, '!node_modules'], gulp.series('ejs', reloadTask));
+    gulp.watch([`${PATHS.src}**/*.{sass,scss}`, '!node_modules'], gulp.task('sass'));
+    gulp.watch([`${PATHS.src}**/*.js`, `!${PATHS.src}**/*.min.js`, '!node_modules'], gulp.task('eslint'));
+    callback();
+  })
+);
 
 //**************************************
 // for build task
@@ -217,7 +228,7 @@ gulp.task('clean', () => {
 // jsファイルのconsoleなどを削除
 gulp.task('build-js', () => {
   return gulp
-    .src([`${PATHS.src}**/*.js`, !`${PATHS.src}**/*.min.js`])
+    .src([`${PATHS.src}**/*.js`, `!${PATHS.src}**/*.min.js`])
     .pipe(plumber())
     .pipe(stripDebug())
     .pipe(replace(/(void 0;|void 0)/g, ''))
@@ -231,20 +242,9 @@ gulp.task('optimize-img', () => {
     .pipe(plumber())
     .pipe(
       imagemin([
-        pngquant({
-          quality: '70-85',
-          speed: 1,
-          floyd: 0,
-        }),
-        imagemin.jpegtran({
-          quality: 85,
-          progressive: true,
-        }),
-        // mozjpeg({
-        //   quality: 85,
-        //   progressive: true
-        // }),
-        // imagemin.svgo(),
+        pngquant({ quality: '70-85', speed: 1, floyd: 0 }),
+        mozjpeg({ quality: 85, progressive: true }),
+        imagemin.svgo(),
         imagemin.optipng(),
         imagemin.gifsicle(),
       ])
@@ -260,7 +260,15 @@ gulp.task('build-css', () => {
       .pipe(plumber({ errorHandler: notify.onError('<%- error.message %>') }))
       // .pipe(prettierPlugin(PRETTIER_CONFIG, { filter: true }))
       .pipe(sass())
-      .pipe(postcss(AUTOPREFIXER_SETTING))
+      .pipe(
+        postcss([
+          postcssGapProperties(),
+          autoprefixer({
+            grid: true,
+            cascade: false,
+          }),
+        ])
+      )
       .pipe(csscomb())
       .pipe(
         rename(path => {
@@ -289,12 +297,13 @@ gulp.task('copy', () => {
 });
 
 // Buildタスク実行
-gulp.task('build', callback => {
-  runSequence('clean', 'ejs', ['build-css', 'build-js'], 'optimize-img', 'copy', () => {
-    callback();
+gulp.task(
+  'build',
+  gulp.series('clean', gulp.parallel('ejs', 'build-css', 'build-js', 'optimize-img'), 'copy', callback => {
     notifier.notify({
       title: 'Gulp',
-      message: 'Build task complete',
+      message: 'build task complete',
     });
-  });
-});
+    callback();
+  })
+);
