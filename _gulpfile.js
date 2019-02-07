@@ -206,7 +206,7 @@ function browserSyncTask(callback) {
 gulp.task(
   'default',
   gulp.series('ejs', 'ejs-cache', 'sass-cache', browserSyncTask, reloadTask, callback => {
-    gulp.watch([`${PATHS.src}**/*.ejs`, `!${PATHS.src}**/_*.ejs`, '!node_modules'], gulp.series('ejs', reloadTask));
+
     gulp.watch([`${PATHS.src}**/*.{sass,scss}`, '!node_modules'], gulp.task('sass'));
     gulp.watch([`${PATHS.src}**/*.js`, `!${PATHS.src}**/*.min.js`, '!node_modules'], gulp.task('eslint'));
     callback();
