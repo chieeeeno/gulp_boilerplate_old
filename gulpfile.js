@@ -22,6 +22,8 @@ const pngquant = require('imagemin-pngquant');
 const replace = require('gulp-replace');
 const cleanCSS = require('gulp-clean-css');
 const gulpif = require('gulp-if');
+const convert = require('gulp-convert');
+const uglify = require('gulp-uglify');
 
 const env = process.env.NODE_ENV;
 
@@ -55,7 +57,6 @@ function sassCacheTask() {
  */
 function sassCompileTask() {
   const outDir = isProduction ? PATHS.dest : PATHS.src;
-  let filePath = '';
   return (
     src(`${PATHS.src}**/*.{sass,scss}`)
       .pipe(
@@ -64,7 +65,7 @@ function sassCompileTask() {
         })
       )
       // 開発時はファイルの内容をメモリにキャッシュする
-      .pipe(gulpif(!isProduction, cache('sass')))
+      // .pipe(gulpif(!isProduction, cache('sass')))
       // 開発時はソースマップを出力する
       .pipe(gulpif(!isProduction, sourcemaps.init()))
       .pipe(sass())
@@ -84,7 +85,6 @@ function sassCompileTask() {
       .pipe(
         rename(path => {
           path.dirname += '/../css'; // 出力先をcssフォルダに変更
-          filePath = path.dirname;
         })
       )
       .pipe(gulpif(!isProduction, sourcemaps.write('.')))
@@ -139,8 +139,9 @@ function ejsTask() {
           indent_inner_html: false,
         })
       )
-      // プロダクション版はCSSファイルのパスを.min.cssのファイルに変更する
+      // プロダクション版はjsファイルとCSSファイルのパスを.minをつけたファイルに変更する
       .pipe(gulpif(isProduction, replace('.css', '.min.css')))
+      // .pipe(gulpif(isProduction, replace('.js', '.min.js')))
       .pipe(rename({ extname: '.html' }))
       .pipe(dest(outDir))
   );
@@ -197,47 +198,21 @@ function cleanTask() {
   return src(`${PATHS.dest}/*`, { read: false }).pipe(clean());
 }
 
-// function buildCssTask() {
-//   return src(`${PATHS.src}**/*.{sass,scss}`, {
-//     sourcemaps: false,
-//   })
-//     .pipe(
-//       plumber({
-//         errorHandler: notify.onError('<%- error.message %>'),
-//       })
-//     )
-//     .pipe(sass())
-//     .pipe(
-//       postcss([
-//         postcssGapProperties(),
-//         autoprefixer({
-//           grid: true,
-//           cascade: false,
-//         }),
-//       ])
-//     )
-//     .pipe(csscomb())
-//     .pipe(cleanCSS())
-//     .pipe(rename({ extname: '.min.css' }))
-//     .pipe(
-//       rename(path => {
-//         path.dirname += '/../css'; // 出力先をcssフォルダに変更
-//       })
-//     )
-//     .pipe(dest(PATHS.dest));
-// }
-
 /**
  * jsファイルのconsoleなどを削除してbuildディレクトリに出力する
  * @returns {*}
  */
 function buildJsTask() {
   const outDir = isProduction ? PATHS.dest : PATHS.src;
-  return src([`${PATHS.src}**/*.js`, `!${PATHS.src}**/*.min.js`])
-    .pipe(plumber())
-    .pipe(stripDebug())
-    .pipe(replace(/(void 0;|void 0)/g, ''))
-    .pipe(dest(outDir));
+  return (
+    src([`${PATHS.src}**/*.js`, `!${PATHS.src}**/*.min.js`])
+      .pipe(plumber())
+      .pipe(stripDebug())
+      .pipe(replace(/(void 0;|void 0)/g, ''))
+      // .pipe(uglify())
+      // .pipe(gulpif(isProduction, rename({ extname: '.min.js' })))
+      .pipe(dest(outDir))
+  );
 }
 
 /**
@@ -284,11 +259,36 @@ function optimizeImgTask() {
     .pipe(dest(outDir));
 }
 
-exports.default = series(parallel(series(ejsTask, ejsCacheTask), series(sassCompileTask, sassCacheTask), browserSyncTask), () => {
+/**
+ * CSVファイルをJSONファイルに変換する
+ * @returns {*}
+ */
+function convertCsvToJson() {
+  const outDir = isProduction ? PATHS.dest : PATHS.src;
+  return src(`${PATHS.src}**/_assets/csv/*.csv`)
+    .pipe(
+      convert({
+        from: 'csv',
+        to: 'json',
+      })
+    )
+    .pipe(
+      rename(path => {
+        path.dirname += '/../../json'; // 出力先をjsonフォルダに変更
+      })
+    )
+    .pipe(dest(outDir));
+}
+
+// デフォルトタスク
+exports.default = series(parallel(series(ejsTask, ejsCacheTask), series(sassCompileTask, sassCacheTask, convertCsvToJson), browserSyncTask), () => {
   watch([`${PATHS.src}**/*.ejs`, '!node_modules'], series(ejsTask, reloadTask));
   watch([`${PATHS.src}**/*.{sass,scss}`, '!node_modules'], sassCompileTask);
   watch([`${PATHS.src}**/*.js`, `!${PATHS.src}**/*.min.js`, '!node_modules'], eslintTask);
 });
 
 // 本番用のビルドタスク
-exports.build = series(cleanTask, ejsTask, sassCompileTask, buildJsTask, optimizeImgTask, copyTask);
+exports.build = series(cleanTask, ejsTask, sassCompileTask, buildJsTask, optimizeImgTask, convertCsvToJson, copyTask);
+
+// CSVからJSONへの変換
+exports.convert = series(convertCsvToJson);

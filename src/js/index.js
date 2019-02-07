@@ -1,17 +1,10 @@
 'use strict';
 (function() {
-  /**
-   * にゃあ〜と鳴きます。
-   */
-  function nyaa() {
-    alert('にゃあ〜');
-    console.log('にゃあ〜');
-  }
-
-  document.addEventListener('DOMContentLoaded', function() {
-    var $btn = document.querySelector('#btn');
-    $btn.addEventListener('click', function() {
-      nyaa();
-    });
-  });
+  console.log('aaaa');
+  console.log('bbbb');
+  console.log('cccc');
+  console.log('dddd');
+  console.log('eeee');
+  console.log('ffff');
+  console.log('gggg');
 })();
