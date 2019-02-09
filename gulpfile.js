@@ -24,6 +24,7 @@ const cleanCSS = require('gulp-clean-css');
 const gulpif = require('gulp-if');
 const convert = require('gulp-convert');
 const uglify = require('gulp-uglify');
+const gulpTs = require('gulp-typescript');
 
 const env = process.env.NODE_ENV;
 
@@ -215,6 +216,25 @@ function buildJsTask() {
   );
 }
 
+function buildTsTask() {
+  const outDir = isProduction ? PATHS.dest : PATHS.src;
+  return src([`${PATHS.src}**/ts/*.ts`, `!${PATHS.src}**/ts/_*.ts`])
+    .pipe(plumber())
+    .pipe(
+      gulpTs({
+        target: 'ES5',
+        module: 'commonjs',
+        noImplicitAny: true,
+      })
+    )
+    .pipe(
+      rename(path => {
+        path.dirname += '/../js'; // 出力先をjsフォルダに変更
+      })
+    )
+    .pipe(dest(outDir));
+}
+
 /**
  * リソースデータを出力先のディレクトリにコピーする
  * @returns {*}
@@ -285,6 +305,7 @@ exports.default = series(parallel(series(ejsTask, ejsCacheTask), series(sassComp
   watch([`${PATHS.src}**/*.ejs`, '!node_modules'], series(ejsTask, reloadTask));
   watch([`${PATHS.src}**/*.{sass,scss}`, '!node_modules'], sassCompileTask);
   watch([`${PATHS.src}**/*.js`, `!${PATHS.src}**/*.min.js`, '!node_modules'], eslintTask);
+  watch([`${PATHS.src}**/*.ts`, '!node_modules'], buildTsTask);
 });
 
 // 本番用のビルドタスク
