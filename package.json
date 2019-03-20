@@ -3,8 +3,8 @@
   "version": "1.1.0",
   "description": "Basic setting of Gulp for create a new website",
   "scripts": {
-    "start": "NODE_ENV=dev gulp",
-    "build": "NODE_ENV=prod gulp build",
+    "start": "NODE_ENV=dev gulp start",
+    "build": "NODE_ENV=production gulp build",
     "lint": "gulp eslint"
   },
   "author": "Tomoki Kikuchi",
@@ -15,10 +15,15 @@
     "last 3 versions"
   ],
   "devDependencies": {
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.1",
+    "@babel/register": "^7.4.0",
     "autoprefixer": "^9.4.7",
+    "babel-loader": "^8.0.5",
     "browser-sync": "^2.26.3",
     "gulp": "^4.0.0",
     "gulp-cached": "^1.1.1",
+    "gulp-changed-in-place": "^2.3.0",
     "gulp-clean": "^0.4.0",
     "gulp-clean-css": "^4.0.0",
     "gulp-convert": "^0.2.0",
@@ -43,6 +48,8 @@
     "postcss-cssnext": "^3.1.0",
     "postcss-gap-properties": "^2.0.0",
     "prettier": "^1.16.4",
-    "typescript": "^3.3.3"
+    "typescript": "^3.3.3",
+    "webpack": "^4.29.6",
+    "webpack-stream": "^5.2.1"
   }
 }

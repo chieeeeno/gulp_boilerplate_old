@@ -1,4 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var _a_1 = require("./_a");
-console.log("hoge is " + _a_1.hoge);
+import { hoge } from './_a.js';
+
+console.log(`hoge is ${hoge}`);

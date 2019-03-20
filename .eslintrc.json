@@ -7,6 +7,10 @@
     "es6": true,
     "node": true
   },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
   "rules": {
     "no-console": [1],
     "no-alert": [2],
