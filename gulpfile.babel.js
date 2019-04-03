@@ -5,7 +5,6 @@ import { series, parallel, watch } from 'gulp';
 import { convertCsvToJson } from './tasks/convert';
 import { cleanTask } from './tasks/clean';
 import { ejsTask, ejsCacheTask } from './tasks/ejs';
-import { eslintTask } from './tasks/eslint';
 import { sassCompileTask, sassCacheTask } from './tasks/sass';
 import { browserSyncTask, reloadTask } from './tasks/server';
 import { optimizeImageTask, copyImageTask } from './tasks/optimizeImage';
