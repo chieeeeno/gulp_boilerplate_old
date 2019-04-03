@@ -11,14 +11,12 @@ root
 　├build
 　├docRoot
 　├src
-　│ ├index.html
-　│ ├css
+　│ ├index.ejs
 　│ ├scss
 　│ ├images
 　│ ├js
 　│ └サブディレクトリ
-　│    ├index.html
-　│    ├css
+　│    ├index.ejs
 　│    ├scss
 　│    ├images
 　│    └js
@@ -28,7 +26,7 @@ root
 　└package.json
 ```
 
-- `./src/配下`：作業用編集
+- `./src/配下`：作業用編集データ
 - `./docRoot/配下`：作業用ドキュメントルート
 - `./build/配下`：納品用データ
 
@@ -36,13 +34,17 @@ root
 
 ### 作業時
 
-root ディレクトリに移動して以下の npm コマンドを実行する
+root ディレクトリに移動して以下の npm コマンドを実行します。
 
 ```
 npm run start
 ```
 
-あとは黙々と実装あるのみ！
+実行すると、docRoot 配下をサーバーが参照し、ビルドしたファイルがコピーされ、ファイルが watch 状態に突入します。
+
+JavaScript は ES2016 に対応してます。
+
+JavaScript を新規作成する時は、 `webpack.config.js` にエントリーポイントを追記してください。
 
 ### 納品時
 
@@ -52,4 +54,4 @@ root ディレクトリに移動して以下の npm コマンドを実行する
 npm run build
 ```
 
-画像最適化などを行い、納品用のファイルに加工して出力する。
+画像最適化などを行い、納品用のファイルに加工して出力します。
