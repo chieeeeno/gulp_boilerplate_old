@@ -8,9 +8,9 @@ export const PATHS = {
 };
 
 export const scripts = {
-  srcRoot: `${PATHS.src}js`,
+  srcRoot: `${PATHS.src}`,
   src: `${PATHS.src}js/**/*.js`,
-  dest: `${PATHS.dest}js`,
+  dest: `${PATHS.dest}`,
 };
 
 // export const sass = {
