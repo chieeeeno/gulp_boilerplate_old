@@ -4,9 +4,9 @@ import notify from 'gulp-notify';
 import ejs from 'gulp-ejs';
 import htmlbeautify from 'gulp-html-beautify';
 import gulpIf from 'gulp-if';
-import cache from 'gulp-cached';
 import replace from 'gulp-replace';
 import rename from 'gulp-rename';
+import changedInPlace from 'gulp-changed-in-place';
 
 import { isProduction, PATHS } from './config';
 
@@ -18,7 +18,7 @@ export function ejsTask() {
   const outDir = isProduction ? PATHS.dest : PATHS.docRoot;
   return (
     src([`${PATHS.src}**/*.ejs`, `!${PATHS.src}**/_*.ejs`])
-      // .pipe(cache('ejs'))
+      .pipe(changedInPlace({ firstPass: true }))
       .pipe(
         plumber({
           errorHandler: notify.onError('<%- error.message %>'),
@@ -45,18 +45,4 @@ export function ejsTask() {
       .pipe(dest(outDir))
   );
   // .pipe(notify({ message: 'EJS task complete' }));
-}
-
-/**
- * EJSファイルをキャッシュする
- * @returns {*|NodeJS.WritableStream}
- */
-export function ejsCacheTask() {
-  return src([`${PATHS.src}**/*.ejs`, `!${PATHS.src}**/_*.ejs`])
-    .pipe(
-      plumber({
-        errorHandler: notify.onError('<%- error.message %>'),
-      })
-    )
-    .pipe(cache('ejs'));
 }

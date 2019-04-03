@@ -8,7 +8,7 @@ import csscomb from 'gulp-csscomb';
 import cleanCSS from 'gulp-clean-css';
 import rename from 'gulp-rename';
 import postcss from 'gulp-postcss';
-import cache from 'gulp-cached';
+import changedInPlace from 'gulp-changed-in-place';
 
 import postcssGapProperties from 'postcss-gap-properties';
 import autoprefixer from 'autoprefixer';
@@ -23,13 +23,12 @@ export function sassCompileTask() {
   const outDir = isProduction ? PATHS.dest : PATHS.docRoot;
   return (
     src(`${PATHS.src}**/*.{sass,scss}`)
+      .pipe(changedInPlace({ firstPass: true }))
       .pipe(
         plumber({
           errorHandler: notify.onError('<%- error.message %>'),
         })
       )
-      // 開発時はファイルの内容をメモリにキャッシュする
-      // .pipe(gulpif(!isProduction, cache('sass')))
       // 開発時はソースマップを出力する
       .pipe(gulpIf(!isProduction, sourcemaps.init()))
       .pipe(sass())
@@ -54,20 +53,4 @@ export function sassCompileTask() {
       .pipe(gulpIf(!isProduction, sourcemaps.write('.')))
       .pipe(dest(outDir))
   );
-}
-
-/**
- * SASSファイルをキャッシュする
- * @returns {*}
- */
-export function sassCacheTask() {
-  return src(`${PATHS.src}**/*.{sass,scss}`, {
-    base: 'src',
-  })
-    .pipe(
-      plumber({
-        errorHandler: notify.onError('<%- error.message %>'),
-      })
-    )
-    .pipe(cache('sass'));
 }
