@@ -22,7 +22,6 @@
     "babel-loader": "^8.0.5",
     "browser-sync": "^2.26.3",
     "gulp": "^4.0.0",
-    "gulp-cached": "^1.1.1",
     "gulp-changed-in-place": "^2.3.0",
     "gulp-clean": "^0.4.0",
     "gulp-clean-css": "^4.0.0",

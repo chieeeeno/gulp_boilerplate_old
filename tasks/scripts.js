@@ -4,7 +4,7 @@ import plumber from 'gulp-plumber';
 import gulpEslint from 'gulp-eslint';
 import webpack from 'webpack';
 import gulpWebpack from 'webpack-stream';
-import changed from 'gulp-changed-in-place';
+import changedInPlace from 'gulp-changed-in-place';
 
 import { scripts as config, isProduction, PATHS } from './config';
 
@@ -19,7 +19,7 @@ export function esTranspile() {
 
 export function esLint() {
   return src(config.src)
-    .pipe(changed({ firstPass: true }))
+    .pipe(changedInPlace({ firstPass: true }))
     .pipe(gulpEslint())
     .pipe(gulpEslint.format())
     .pipe(gulpIf(isProduction, gulpEslint.failAfterError()));
