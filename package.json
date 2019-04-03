@@ -1,9 +1,9 @@
 {
   "name": "gulp_boilerplate",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Basic setting of Gulp for create a new website",
   "scripts": {
-    "start": "NODE_ENV=dev gulp start",
+    "start": "NODE_ENV=development gulp start",
     "build": "NODE_ENV=production gulp build",
     "lint": "gulp eslint"
   },
@@ -15,8 +15,8 @@
     "last 3 versions"
   ],
   "devDependencies": {
-    "@babel/core": "^7.4.0",
-    "@babel/preset-env": "^7.4.1",
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
     "@babel/register": "^7.4.0",
     "autoprefixer": "^9.4.7",
     "babel-loader": "^8.0.5",
@@ -48,7 +48,7 @@
     "postcss-cssnext": "^3.1.0",
     "postcss-gap-properties": "^2.0.0",
     "prettier": "^1.16.4",
-    "typescript": "^3.3.3",
+    "typescript": "^3.4.1",
     "webpack": "^4.29.6",
     "webpack-stream": "^5.2.1"
   }

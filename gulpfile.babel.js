@@ -8,18 +8,26 @@ import { ejsTask, ejsCacheTask } from './tasks/ejs';
 import { eslintTask } from './tasks/eslint';
 import { sassCompileTask, sassCacheTask } from './tasks/sass';
 import { browserSyncTask, reloadTask } from './tasks/server';
-import { optimizeImageTask } from './tasks/optimizeImage';
+import { optimizeImageTask, copyImageTask } from './tasks/optimizeImage';
 import { jsCompileTask } from './tasks/scripts';
 
 import { PATHS } from './tasks/config';
 
 function watchTask() {
   watch([`${PATHS.src}**/*.ejs`, '!node_modules'], series(ejsTask, reloadTask));
-  watch([`${PATHS.src}**/*.{sass,scss}`, '!node_modules'], sassCompileTask);
+  watch([`${PATHS.src}**/*.{sass,scss}`, '!node_modules'], series(sassCompileTask, reloadTask));
   watch([`${PATHS.src}**/*.js`, `!${PATHS.src}**/*.min.js`, '!node_modules'], jsCompileTask);
+  watch([`${PATHS.src}**/*.{jpg,jpeg,gif,png,svg}`], copyImageTask);
   // watch([`${PATHS.src}**/*.ts`, '!node_modules'], buildTsTask);
 }
 
-export const start = parallel(series(ejsTask, ejsCacheTask), series(sassCompileTask, sassCacheTask), browserSyncTask, watchTask);
+export const start = parallel(
+  series(ejsTask, ejsCacheTask),
+  series(sassCompileTask, sassCacheTask),
+  jsCompileTask,
+  copyImageTask,
+  browserSyncTask,
+  watchTask
+);
 export const build = series(cleanTask, ejsTask, sassCompileTask, jsCompileTask, optimizeImageTask);
 export const convert = series(convertCsvToJson);

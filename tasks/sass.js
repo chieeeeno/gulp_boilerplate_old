@@ -53,8 +53,6 @@ export function sassCompileTask() {
       )
       .pipe(gulpIf(!isProduction, sourcemaps.write('.')))
       .pipe(dest(outDir))
-    // 開発時はファイルをリロードする
-    // .pipe(gulpif(!isProduction, browserSync.stream()))
   );
 }
 
