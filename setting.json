@@ -1,20 +1,4 @@
 {
-  "path": {
-    "src": "./src/",
-    "dest": "./build/"
-  },
-  "autoprefixer": {
-    "browsers": ["android > 5", "iOS > 10", "last 3 versions"]
-  },
-  "beautify": {
-    "indent_size": 2,
-    "indent_char": " ",
-    "max_preserve_newlines": 0,
-    "indent_inner_html": false
-  },
-  "prettier": {
-    "singleQuote": true
-  },
   "site_config": {
     "ga_account": "UA-00000000-1",
     "tw_card": false,

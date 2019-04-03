@@ -1,17 +1,3 @@
-'use strict';
-(function() {
-  /**
-   * にゃあ〜と鳴きます。
-   */
-  function nyaa() {
-    alert('にゃあ〜');
-    console.log('にゃあ〜');
-  }
+import { hoge } from './_a.js';
 
-  document.addEventListener('DOMContentLoaded', function() {
-    var $btn = document.querySelector('#btn');
-    $btn.addEventListener('click', function() {
-      nyaa();
-    });
-  });
-})();
+console.log(`hoge is ${hoge}`);
