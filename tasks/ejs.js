@@ -8,7 +8,7 @@ import replace from 'gulp-replace';
 import rename from 'gulp-rename';
 import changedInPlace from 'gulp-changed-in-place';
 
-import { isProduction, PATHS } from './config';
+import { isProduction, PATHS, GA_ACCOUNT } from './config';
 
 /**
  * EJSのビルドを実行する
@@ -26,7 +26,7 @@ export function ejsTask() {
       )
       .pipe(
         ejs({
-          // env: env,
+          gaAccount: GA_ACCOUNT,
         })
       )
       .pipe(

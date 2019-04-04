@@ -13,6 +13,8 @@ export const scripts = {
   dest: `${PATHS.dest}`,
 };
 
+export const GA_ACCOUNT = 'UA-00000000-1';
+
 // export const sass = {
 //   src: `${PATHS.src}/scss/**/*.scss`,
 //   dest: `${PATHS.src}/css`,
