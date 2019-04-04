@@ -1,7 +1,7 @@
 import { scripts as config } from './tasks/config';
 
 module.exports = {
-  mode: process.env.NODE_ENV ? 'production' : 'development',
+  mode: process.env.NODE_ENV,
   entry: {
     'js/app': `${config.srcRoot}/js/index.js`,
   },

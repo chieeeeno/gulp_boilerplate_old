@@ -3,7 +3,11 @@
     [
       "@babel/preset-env",
       {
-        "targets": { "node": "current" }
+        "targets": {
+          "ie": 11
+        },
+        "useBuiltIns": "usage",
+        "corejs": 3
       }
     ]
   ]
