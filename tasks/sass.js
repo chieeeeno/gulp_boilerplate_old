@@ -11,6 +11,7 @@ import postcss from 'gulp-postcss';
 import changedInPlace from 'gulp-changed-in-place';
 
 import postcssGapProperties from 'postcss-gap-properties';
+import postcssFlexbugsFixes from 'postcss-flexbugs-fixes';
 import autoprefixer from 'autoprefixer';
 
 import { isProduction, PATHS } from './config';
@@ -35,6 +36,7 @@ export function sassCompileTask() {
       .pipe(
         postcss([
           postcssGapProperties(),
+          postcssFlexbugsFixes(),
           autoprefixer({
             grid: true,
             cascade: false,
