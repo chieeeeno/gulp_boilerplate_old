@@ -10,7 +10,7 @@ import { scripts as config, isProduction, PATHS } from './config';
 
 const outDir = isProduction ? PATHS.dest : PATHS.docRoot;
 
-export function esTranspile() {
+export function transpile() {
   return src(config.src)
     .pipe(plumber())
     .pipe(gulpWebpack(require('../webpack.config.js'), webpack))
@@ -25,4 +25,4 @@ export function esLint() {
     .pipe(gulpIf(isProduction, gulpEslint.failAfterError()));
 }
 
-export const jsCompileTask = series(esLint, esTranspile);
+export const transpileTask = series(esLint, transpile);
